@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit Converter</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+
+        div {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            box-sizing: border-box;
+        }
+
+        select {
+            width: 100px;
+        }
+
+        button {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            font-size: 18px;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Unit Converter</h1>
+
+    <div>
+        <label for="value">Value:</label>
+        <input type="number" id="value" step="any">
+    </div>
+
+    <div>
+        <label for="from_unit">From Unit:</label>
+        <select id="from_unit">
+            <option value="km">km</option>
+            <option value="m">m</option>
+            <option value="cm">cm</option>
+            <option value="mm">mm</option>
+            <option value="mile">mile</option>
+            <option value="yard">yard</option>
+            <option value="foot">foot</option>
+            <option value="inch">inch</option>
+        </select>
+    </div>
+
+    <div>
+        <label for="to_unit">To Unit:</label>
+        <select id="to_unit">
+            <option value="km">km</option>
+            <option value="m">m</option>
+            <option value="cm">cm</option>
+            <option value="mm">mm</option>
+            <option value="mile">mile</option>
+            <option value="yard">yard</option>
+            <option value="foot">foot</option>
+            <option value="inch">inch</option>
+        </select>
+    </div>
+
+    <button onclick="convert()">Convert</button>
+
+    <div id="result"></div>
+
+    <script>
+        function convert() {
+            const value = document.getElementById('value').value;
+            const fromUnit = document.getElementById('from_unit').value;
+            const toUnit = document.getElementById('to_unit').value;
+
+            if (value === "") {
+                window.alert("Please enter a value.");
+                return;
+            }
+
+            fetch('/convert', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    value: value,
+                    from_unit: fromUnit,
+                    to_unit: toUnit,
+                }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('result').innerText = data.result;
+            });
+        }
+    </script>
+</body>
+</html>
